@@ -186,6 +186,62 @@ export function createAdminSurveysRouter(
     res.json(updated);
   });
 
+  // GET /api/admin/surveys/:id/results — view results for a closed survey
+  router.get('/surveys/:id/results', async (req: Request, res: Response) => {
+    const survey = await prisma.survey.findUnique({
+      where: { id: paramId(req) },
+      include: { team: { select: { name: true } } },
+    });
+
+    if (!survey) {
+      res.status(404).json({ error: 'Survey not found', code: 'SURVEY_NOT_FOUND' });
+      return;
+    }
+
+    if (survey.status !== 'CLOSED') {
+      res.status(403).json({ error: 'Results are not ready yet', code: 'RESULTS_NOT_READY' });
+      return;
+    }
+
+    const questions = await prisma.question.findMany({ orderBy: { order: 'asc' } });
+    const responses = await prisma.response.findMany({ where: { surveyId: survey.id } });
+
+    const results = questions.map((q) => {
+      const scores = responses.filter((r) => r.questionId === q.id).map((r) => r.score);
+      scores.sort((a, b) => a - b);
+
+      const average =
+        scores.length > 0
+          ? parseFloat((scores.reduce((a, b) => a + b, 0) / scores.length).toFixed(2))
+          : 0;
+
+      let median = 0;
+      if (scores.length > 0) {
+        const mid = Math.floor(scores.length / 2);
+        median =
+          scores.length % 2 !== 0
+            ? scores[mid]
+            : parseFloat(((scores[mid - 1] + scores[mid]) / 2).toFixed(2));
+      }
+
+      return {
+        questionId: q.id,
+        questionLabel: q.label,
+        average,
+        median,
+        scores,
+      };
+    });
+
+    res.json({
+      surveyId: survey.id,
+      sprintLabel: survey.sprintLabel,
+      teamName: survey.team.name,
+      closedAt: survey.closedAt,
+      results,
+    });
+  });
+
   return router;
 }
 

@@ -15,9 +15,27 @@ import {
   SimpleShowLayout,
   required,
   useRecordContext,
+  useShowContext,
 } from 'react-admin';
-import { Button, Chip, Box, Typography, IconButton, Tooltip } from '@mui/material';
+import {
+  Button,
+  Chip,
+  Box,
+  Typography,
+  IconButton,
+  Tooltip,
+  Paper,
+  LinearProgress,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  CircularProgress,
+} from '@mui/material';
 import ContentCopy from '@mui/icons-material/ContentCopy';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getAuthToken } from './authProvider';
 
@@ -122,6 +140,112 @@ export function SurveyCreate() {
   );
 }
 
+interface QuestionResult {
+  questionId: string;
+  questionLabel: string;
+  average: number;
+  median: number;
+  scores: number[];
+}
+
+function SurveyResults() {
+  const { record } = useShowContext();
+  const [results, setResults] = useState<QuestionResult[] | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (!record || record.status !== 'CLOSED') return;
+
+    setLoading(true);
+    const token = getAuthToken();
+    fetch(`${API_URL}/api/admin/surveys/${record.id}/results`, {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (data?.results) setResults(data.results);
+      })
+      .finally(() => setLoading(false));
+  }, [record]);
+
+  if (!record || record.status !== 'CLOSED') return null;
+
+  if (loading) {
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center', py: 3 }}>
+        <CircularProgress size={24} />
+      </Box>
+    );
+  }
+
+  if (!results) return null;
+
+  return (
+    <Box sx={{ mt: 2 }}>
+      <Typography variant="h6" gutterBottom>
+        Results
+      </Typography>
+      {results.map((q) => (
+        <Paper key={q.questionId} sx={{ p: 2, mb: 2 }}>
+          <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
+            {q.questionLabel}
+          </Typography>
+          <Box sx={{ display: 'flex', gap: 4, mb: 1.5 }}>
+            <Box>
+              <Typography variant="caption" color="text.secondary">
+                Average
+              </Typography>
+              <Typography variant="h6">{q.average.toFixed(2)}</Typography>
+            </Box>
+            <Box>
+              <Typography variant="caption" color="text.secondary">
+                Median
+              </Typography>
+              <Typography variant="h6">{q.median}</Typography>
+            </Box>
+            <Box>
+              <Typography variant="caption" color="text.secondary">
+                Responses
+              </Typography>
+              <Typography variant="h6">{q.scores.length}</Typography>
+            </Box>
+          </Box>
+          <TableContainer>
+            <Table size="small">
+              <TableHead>
+                <TableRow>
+                  <TableCell sx={{ width: 60 }}>Score</TableCell>
+                  <TableCell sx={{ width: 60 }}>Count</TableCell>
+                  <TableCell>Distribution</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {Array.from({ length: 10 }, (_, i) => i + 1).map((score) => {
+                  const count = q.scores.filter((s) => s === score).length;
+                  const pct = q.scores.length > 0 ? (count / q.scores.length) * 100 : 0;
+                  return (
+                    <TableRow key={score}>
+                      <TableCell>{score}</TableCell>
+                      <TableCell>{count}</TableCell>
+                      <TableCell>
+                        <LinearProgress
+                          variant="determinate"
+                          value={pct}
+                          sx={{ height: 10, borderRadius: 1 }}
+                        />
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </Paper>
+      ))}
+    </Box>
+  );
+}
+
 export function SurveyShow() {
   return (
     <Show>
@@ -149,6 +273,7 @@ export function SurveyShow() {
         />
         <FunctionField label="" render={() => <CloseButton />} />
       </SimpleShowLayout>
+      <SurveyResults />
     </Show>
   );
 }
