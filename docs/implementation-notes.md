@@ -2,22 +2,22 @@
 
 ## 1. Frontend Route Map
 
-| Route | Page | Auth Required |
-|---|---|---|
-| / | Home / landing page | None |
-| /survey/:token | Participant survey form | Survey token in URL |
-| /survey/:token/waiting | Waiting for all responses screen | Survey token |
-| /survey/:token/results | Results page | Survey token |
-| /survey/:token/expired | Survey link expired screen | None |
-| /survey/:token/submitted | Already submitted screen | None |
-| /admin | Admin login page / dashboard | None (login) / Admin JWT (dashboard) |
-| /admin/teams | Team list and management | Admin JWT |
-| /admin/teams/:id/show | Team dashboard with trends | Admin JWT |
-| /admin/teams/create | Create team form | Admin JWT |
-| /admin/teams/:id | Edit team form | Admin JWT |
-| /admin/surveys | Survey list with status badges | Admin JWT |
-| /admin/surveys/create | Create survey form | Admin JWT |
-| /admin/surveys/:id/show | Survey detail, participant link, results, close button | Admin JWT |
+| Route                    | Page                                                   | Auth Required                        |
+| ------------------------ | ------------------------------------------------------ | ------------------------------------ |
+| /                        | Home / landing page                                    | None                                 |
+| /survey/:token           | Participant survey form                                | Survey token in URL                  |
+| /survey/:token/waiting   | Waiting for all responses screen                       | Survey token                         |
+| /survey/:token/results   | Results page                                           | Survey token                         |
+| /survey/:token/expired   | Survey link expired screen                             | None                                 |
+| /survey/:token/submitted | Already submitted screen                               | None                                 |
+| /admin                   | Admin login page / dashboard                           | None (login) / Admin JWT (dashboard) |
+| /admin/teams             | Team list and management                               | Admin JWT                            |
+| /admin/teams/:id/show    | Team dashboard with trends                             | Admin JWT                            |
+| /admin/teams/create      | Create team form                                       | Admin JWT                            |
+| /admin/teams/:id         | Edit team form                                         | Admin JWT                            |
+| /admin/surveys           | Survey list with status badges                         | Admin JWT                            |
+| /admin/surveys/create    | Create survey form                                     | Admin JWT                            |
+| /admin/surveys/:id/show  | Survey detail, participant link, results, close button | Admin JWT                            |
 
 Routing library: React Router v7. React Admin handles admin sub-routes internally. Auth guard: RequireAdmin (via React Admin's `requireAuth`) checks for valid admin JWT in localStorage and redirects to login if missing.
 

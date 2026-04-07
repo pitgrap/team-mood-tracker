@@ -217,12 +217,18 @@ async function getResults(surveyId: string) {
     const scores = responses.filter((r) => r.questionId === q.id).map((r) => r.score);
     scores.sort((a, b) => a - b);
 
-    const average = scores.length > 0 ? parseFloat((scores.reduce((a, b) => a + b, 0) / scores.length).toFixed(2)) : 0;
+    const average =
+      scores.length > 0
+        ? parseFloat((scores.reduce((a, b) => a + b, 0) / scores.length).toFixed(2))
+        : 0;
 
     let median = 0;
     if (scores.length > 0) {
       const mid = Math.floor(scores.length / 2);
-      median = scores.length % 2 !== 0 ? scores[mid] : parseFloat(((scores[mid - 1] + scores[mid]) / 2).toFixed(2));
+      median =
+        scores.length % 2 !== 0
+          ? scores[mid]
+          : parseFloat(((scores[mid - 1] + scores[mid]) / 2).toFixed(2));
     }
 
     return {
@@ -234,4 +240,3 @@ async function getResults(surveyId: string) {
     };
   });
 }
-

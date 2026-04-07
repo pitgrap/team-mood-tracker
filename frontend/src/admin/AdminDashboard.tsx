@@ -133,19 +133,44 @@ export function AdminDashboard() {
       {/* Stat Cards */}
       <Grid container spacing={2} sx={{ mb: 3 }}>
         <Grid item xs={6} md={2.4}>
-          <StatCard title="Teams" value={data.teamCount} icon={<GroupIcon fontSize="large" />} color="#1976d2" />
+          <StatCard
+            title="Teams"
+            value={data.teamCount}
+            icon={<GroupIcon fontSize="large" />}
+            color="#1976d2"
+          />
         </Grid>
         <Grid item xs={6} md={2.4}>
-          <StatCard title="Surveys" value={data.surveyCount} icon={<PollIcon fontSize="large" />} color="#9c27b0" />
+          <StatCard
+            title="Surveys"
+            value={data.surveyCount}
+            icon={<PollIcon fontSize="large" />}
+            color="#9c27b0"
+          />
         </Grid>
         <Grid item xs={6} md={2.4}>
-          <StatCard title="Open" value={data.openSurveys} icon={<PendingIcon fontSize="large" />} color="#ed6c02" />
+          <StatCard
+            title="Open"
+            value={data.openSurveys}
+            icon={<PendingIcon fontSize="large" />}
+            color="#ed6c02"
+          />
         </Grid>
         <Grid item xs={6} md={2.4}>
-          <StatCard title="Closed" value={data.closedSurveys} icon={<CheckCircleIcon fontSize="large" />} color="#2e7d32" />
+          <StatCard
+            title="Closed"
+            value={data.closedSurveys}
+            icon={<CheckCircleIcon fontSize="large" />}
+            color="#2e7d32"
+          />
         </Grid>
         <Grid item xs={6} md={2.4}>
-          <StatCard title="Responses" value={data.responseCount} icon={<QuestionAnswerIcon fontSize="large" />} color="#0288d1" />
+          <StatCard
+            title="Responses"
+            value={data.responseCount}
+            icon={<QuestionAnswerIcon fontSize="large" />}
+            color="#0288d1"
+          />
         </Grid>
       </Grid>
 
@@ -217,7 +242,13 @@ export function AdminDashboard() {
                                 <Chip
                                   label={qa.average.toFixed(1)}
                                   size="small"
-                                  color={qa.average >= 7 ? 'success' : qa.average >= 4 ? 'warning' : 'error'}
+                                  color={
+                                    qa.average >= 7
+                                      ? 'success'
+                                      : qa.average >= 4
+                                        ? 'warning'
+                                        : 'error'
+                                  }
                                   variant="outlined"
                                 />
                               ) : (

@@ -46,7 +46,11 @@ export function createApp(config: EnvConfig) {
   app.use('/api/admin', adminTeamsRouter);
   app.use(
     '/api/admin',
-    createAdminSurveysRouter(config.SURVEY_TOKEN_SECRET, config.SURVEY_TOKEN_EXPIRY, config.FRONTEND_URL),
+    createAdminSurveysRouter(
+      config.SURVEY_TOKEN_SECRET,
+      config.SURVEY_TOKEN_EXPIRY,
+      config.FRONTEND_URL,
+    ),
   );
 
   // Participant routes - no auth required (M3.3)

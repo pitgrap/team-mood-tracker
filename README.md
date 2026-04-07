@@ -13,12 +13,12 @@ A web application for tracking team mood at the end of each Scrum sprint. Admins
 
 ## Tech Stack
 
-| Layer    | Technology                                      |
-| -------- | ----------------------------------------------- |
-| Frontend | React, TypeScript, React Admin, MUI, Vite       |
-| Backend  | Node.js, Express 5, TypeScript                  |
-| ORM      | Prisma                                          |
-| Database | PostgreSQL                                      |
+| Layer    | Technology                                        |
+| -------- | ------------------------------------------------- |
+| Frontend | React, TypeScript, React Admin, MUI, Vite         |
+| Backend  | Node.js, Express 5, TypeScript                    |
+| ORM      | Prisma                                            |
+| Database | PostgreSQL                                        |
 | Testing  | Jest (backend), Vitest (frontend), MSW, Supertest |
 
 ## Prerequisites
@@ -63,23 +63,23 @@ cp backend/.env.example backend/.env  # if an example exists, otherwise create m
 
 Required variables:
 
-| Variable              | Description                                | Example                                                    |
-| --------------------- | ------------------------------------------ | ---------------------------------------------------------- |
-| `DATABASE_URL`        | PostgreSQL connection string               | `postgresql://test:test@localhost:5433/moodtracker_test`   |
-| `JWT_SECRET`          | Secret for admin auth tokens               | `change-me-jwt-secret`                                     |
-| `SURVEY_TOKEN_SECRET` | Secret for participant survey tokens       | `change-me-survey-secret`                                  |
-| `FRONTEND_URL`        | URL of the frontend (for CORS)             | `http://localhost:5173`                                     |
+| Variable              | Description                          | Example                                                  |
+| --------------------- | ------------------------------------ | -------------------------------------------------------- |
+| `DATABASE_URL`        | PostgreSQL connection string         | `postgresql://test:test@localhost:5433/moodtracker_test` |
+| `JWT_SECRET`          | Secret for admin auth tokens         | `change-me-jwt-secret`                                   |
+| `SURVEY_TOKEN_SECRET` | Secret for participant survey tokens | `change-me-survey-secret`                                |
+| `FRONTEND_URL`        | URL of the frontend (for CORS)       | `http://localhost:5173`                                  |
 
 Optional variables:
 
-| Variable              | Description                                | Default        |
-| --------------------- | ------------------------------------------ | -------------- |
-| `PORT`                | Backend server port                        | `3001`         |
-| `SURVEY_TOKEN_EXPIRY` | Survey link expiry duration                | `7d`           |
-| `ADMIN_SEED_EMAIL`    | Email for the seeded admin account         | —              |
-| `ADMIN_SEED_PASSWORD` | Password for the seeded admin account      | —              |
-| `METABASE_ENDPOINT`   | External Metabase API URL                  | —              |
-| `METABASE_API_KEY`    | API key for Metabase push                  | —              |
+| Variable              | Description                           | Default |
+| --------------------- | ------------------------------------- | ------- |
+| `PORT`                | Backend server port                   | `3001`  |
+| `SURVEY_TOKEN_EXPIRY` | Survey link expiry duration           | `7d`    |
+| `ADMIN_SEED_EMAIL`    | Email for the seeded admin account    | —       |
+| `ADMIN_SEED_PASSWORD` | Password for the seeded admin account | —       |
+| `METABASE_ENDPOINT`   | External Metabase API URL             | —       |
+| `METABASE_API_KEY`    | API key for Metabase push             | —       |
 
 ### 5. Run database migrations and seed
 
@@ -145,4 +145,3 @@ Additional documentation lives in the [`docs/`](docs/) folder:
 - [Implementation Notes](docs/implementation-notes.md)
 - [Testing Strategy](docs/testing-strategy.md)
 - [Roadmap](docs/roadmap.md)
-

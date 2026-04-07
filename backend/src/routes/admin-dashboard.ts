@@ -114,4 +114,3 @@ adminDashboardRouter.get('/dashboard', async (_req: Request, res: Response) => {
 });
 
 export default adminDashboardRouter;
-

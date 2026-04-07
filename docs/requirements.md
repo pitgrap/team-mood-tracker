@@ -14,8 +14,8 @@ results, and pushes data for reporting to an external Metabase endpoint.
 
 Each survey contains exactly two fixed questions (seeded at startup):
 
-1. **Sprint Satisfaction** – *"How satisfied are you with the sprint result?"*
-2. **Personal Mood** – *"How do you feel?"*
+1. **Sprint Satisfaction** – _"How satisfied are you with the sprint result?"_
+2. **Personal Mood** – _"How do you feel?"_
 
 ### 1.2 Answer Format
 
@@ -27,7 +27,7 @@ Each survey contains exactly two fixed questions (seeded at startup):
 ### 1.3 Submission Rules
 
 - Each participant may submit **exactly once** per survey instance,
-enforced via their unique survey token
+  enforced via their unique survey token
 - Submissions are **anonymous** — no user identity is stored with a response
 - The survey **auto-closes** once the expected participant count has been reached
 - An admin may **manually close** a survey at any time before that point
@@ -77,11 +77,11 @@ already closed, or on a separate results page for closed surveys:
 
 ### Results Page Content
 
-| Metric  | Description                            |
-|---------|----------------------------------------|
-| Raw     | All individual scores per question     |
-| Average | Arithmetic mean per question           |
-| Median  | Median value per question              |
+| Metric  | Description                        |
+| ------- | ---------------------------------- |
+| Raw     | All individual scores per question |
+| Average | Arithmetic mean per question       |
+| Median  | Median value per question          |
 
 ---
 
@@ -137,14 +137,14 @@ already closed, or on a separate results page for closed surveys:
 
 ## 6. Non-Functional Requirements
 
-| Concern        | Requirement                                                          |
-|----------------|----------------------------------------------------------------------|
-| Frequency      | One survey per team per Scrum sprint                                 |
-| Anonymity      | Individual answers must not be traceable to specific users           |
-| Scalability    | Must support multiple teams running surveys concurrently             |
-| Accessibility  | UI must be usable on both desktop and mobile browsers                |
-| Auth           | Admin requires login; participants use a shared token link           |
-| Resilience     | A failed Metabase push must be logged but must not crash the app     |
+| Concern       | Requirement                                                      |
+| ------------- | ---------------------------------------------------------------- |
+| Frequency     | One survey per team per Scrum sprint                             |
+| Anonymity     | Individual answers must not be traceable to specific users       |
+| Scalability   | Must support multiple teams running surveys concurrently         |
+| Accessibility | UI must be usable on both desktop and mobile browsers            |
+| Auth          | Admin requires login; participants use a shared token link       |
+| Resilience    | A failed Metabase push must be logged but must not crash the app |
 
 ---
 

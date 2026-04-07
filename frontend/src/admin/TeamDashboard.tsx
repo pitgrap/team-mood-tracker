@@ -81,13 +81,27 @@ interface TeamDashboardData {
   surveys: SurveyBreakdown[];
 }
 
-function StatCard({ title, value, icon, color }: { title: string; value: number; icon: React.ReactNode; color: string }) {
+function StatCard({
+  title,
+  value,
+  icon,
+  color,
+}: {
+  title: string;
+  value: number;
+  icon: React.ReactNode;
+  color: string;
+}) {
   return (
     <Paper sx={{ p: 2, display: 'flex', alignItems: 'center', gap: 2 }}>
       <Box sx={{ color, display: 'flex' }}>{icon}</Box>
       <Box>
-        <Typography variant="h4" fontWeight="bold">{value}</Typography>
-        <Typography variant="body2" color="text.secondary">{title}</Typography>
+        <Typography variant="h4" fontWeight="bold">
+          {value}
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
+          {title}
+        </Typography>
       </Box>
     </Paper>
   );
@@ -101,7 +115,12 @@ function TrendIcon({ trend }: { trend: number }) {
 
 /** Simple SVG sparkline chart */
 function SparklineChart({ dataPoints, color }: { dataPoints: TrendDataPoint[]; color: string }) {
-  if (dataPoints.length < 2) return <Typography variant="caption" color="text.secondary">Not enough data</Typography>;
+  if (dataPoints.length < 2)
+    return (
+      <Typography variant="caption" color="text.secondary">
+        Not enough data
+      </Typography>
+    );
 
   const width = 500;
   const height = 120;
@@ -132,21 +151,40 @@ function SparklineChart({ dataPoints, color }: { dataPoints: TrendDataPoint[]; c
         const y = padding.top + chartH - ((t - minV) / range) * chartH;
         return (
           <g key={t}>
-            <line x1={padding.left} y1={y} x2={width - padding.right} y2={y} stroke="#e0e0e0" strokeDasharray="4 2" />
-            <text x={padding.left - 4} y={y + 4} textAnchor="end" fontSize={10} fill="#999">{t.toFixed(1)}</text>
+            <line
+              x1={padding.left}
+              y1={y}
+              x2={width - padding.right}
+              y2={y}
+              stroke="#e0e0e0"
+              strokeDasharray="4 2"
+            />
+            <text x={padding.left - 4} y={y + 4} textAnchor="end" fontSize={10} fill="#999">
+              {t.toFixed(1)}
+            </text>
           </g>
         );
       })}
       {/* Area fill */}
       <path d={areaPath} fill={color} opacity={0.1} />
       {/* Line */}
-      <polyline points={polyline} fill="none" stroke={color} strokeWidth={2.5} strokeLinejoin="round" />
+      <polyline
+        points={polyline}
+        fill="none"
+        stroke={color}
+        strokeWidth={2.5}
+        strokeLinejoin="round"
+      />
       {/* Dots + labels */}
       {points.map((p, i) => (
         <g key={i}>
           <circle cx={p.x} cy={p.y} r={4} fill={color} />
-          <text x={p.x} y={p.y - 8} textAnchor="middle" fontSize={9} fill={color} fontWeight="bold">{values[i].toFixed(1)}</text>
-          <text x={p.x} y={padding.top + chartH + 14} textAnchor="middle" fontSize={8} fill="#999">{dataPoints[i].sprintLabel.replace('Sprint ', 'S')}</text>
+          <text x={p.x} y={p.y - 8} textAnchor="middle" fontSize={9} fill={color} fontWeight="bold">
+            {values[i].toFixed(1)}
+          </text>
+          <text x={p.x} y={padding.top + chartH + 14} textAnchor="middle" fontSize={8} fill="#999">
+            {dataPoints[i].sprintLabel.replace('Sprint ', 'S')}
+          </text>
         </g>
       ))}
     </svg>
@@ -178,7 +216,12 @@ export function TeamDashboard() {
     load();
   }, [id]);
 
-  if (loading) return <Box sx={{ display: 'flex', justifyContent: 'center', mt: 8 }}><CircularProgress /></Box>;
+  if (loading)
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center', mt: 8 }}>
+        <CircularProgress />
+      </Box>
+    );
   if (error || !data) return <Alert severity="error">{error}</Alert>;
 
   const colors = ['#1976d2', '#e91e63'];
@@ -198,16 +241,36 @@ export function TeamDashboard() {
       {/* Stat Cards */}
       <Grid container spacing={2} sx={{ mb: 3 }}>
         <Grid item xs={6} md={3}>
-          <StatCard title="Surveys" value={data.totalSurveys} icon={<PollIcon fontSize="large" />} color="#9c27b0" />
+          <StatCard
+            title="Surveys"
+            value={data.totalSurveys}
+            icon={<PollIcon fontSize="large" />}
+            color="#9c27b0"
+          />
         </Grid>
         <Grid item xs={6} md={3}>
-          <StatCard title="Closed" value={data.closedSurveys} icon={<CheckCircleIcon fontSize="large" />} color="#2e7d32" />
+          <StatCard
+            title="Closed"
+            value={data.closedSurveys}
+            icon={<CheckCircleIcon fontSize="large" />}
+            color="#2e7d32"
+          />
         </Grid>
         <Grid item xs={6} md={3}>
-          <StatCard title="Open" value={data.openSurveys} icon={<GroupIcon fontSize="large" />} color="#ed6c02" />
+          <StatCard
+            title="Open"
+            value={data.openSurveys}
+            icon={<GroupIcon fontSize="large" />}
+            color="#ed6c02"
+          />
         </Grid>
         <Grid item xs={6} md={3}>
-          <StatCard title="Responses" value={data.totalResponses} icon={<QuestionAnswerIcon fontSize="large" />} color="#0288d1" />
+          <StatCard
+            title="Responses"
+            value={data.totalResponses}
+            icon={<QuestionAnswerIcon fontSize="large" />}
+            color="#0288d1"
+          />
         </Grid>
       </Grid>
 
@@ -215,17 +278,27 @@ export function TeamDashboard() {
       {data.overallAverages.some((a) => a.totalResponses > 0) && (
         <Card sx={{ mb: 3 }}>
           <CardContent>
-            <Typography variant="h6" gutterBottom>Overall Averages</Typography>
+            <Typography variant="h6" gutterBottom>
+              Overall Averages
+            </Typography>
             {data.overallAverages.map((q) => (
               <Box key={q.questionId} sx={{ mb: 2 }}>
-                <Typography variant="body2" color="text.secondary">{q.questionLabel}</Typography>
+                <Typography variant="body2" color="text.secondary">
+                  {q.questionLabel}
+                </Typography>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                  <LinearProgress variant="determinate" value={q.average * 10} sx={{ flex: 1, height: 14, borderRadius: 1 }} />
+                  <LinearProgress
+                    variant="determinate"
+                    value={q.average * 10}
+                    sx={{ flex: 1, height: 14, borderRadius: 1 }}
+                  />
                   <Typography variant="h6" sx={{ minWidth: 48, textAlign: 'right' }}>
                     {q.average > 0 ? q.average.toFixed(2) : '—'}
                   </Typography>
                 </Box>
-                <Typography variant="caption" color="text.secondary">{q.totalResponses} responses</Typography>
+                <Typography variant="caption" color="text.secondary">
+                  {q.totalResponses} responses
+                </Typography>
               </Box>
             ))}
           </CardContent>
@@ -236,7 +309,9 @@ export function TeamDashboard() {
       {data.trends.some((t) => t.dataPoints.length >= 2) && (
         <Card sx={{ mb: 3 }}>
           <CardContent>
-            <Typography variant="h6" gutterBottom>Trend Over Sprints</Typography>
+            <Typography variant="h6" gutterBottom>
+              Trend Over Sprints
+            </Typography>
             {data.trends.map((trend, ti) => {
               if (trend.dataPoints.length < 2) return null;
               const lastTwo = trend.dataPoints.slice(-2);
@@ -244,13 +319,28 @@ export function TeamDashboard() {
               return (
                 <Box key={trend.questionId} sx={{ mb: 3 }}>
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
-                    <Typography variant="subtitle1" fontWeight="bold">{trend.questionLabel}</Typography>
+                    <Typography variant="subtitle1" fontWeight="bold">
+                      {trend.questionLabel}
+                    </Typography>
                     <TrendIcon trend={trendDelta} />
-                    <Typography variant="caption" color={trendDelta > 0 ? 'success.main' : trendDelta < 0 ? 'error.main' : 'text.secondary'}>
-                      {trendDelta > 0 ? '+' : ''}{trendDelta.toFixed(2)} vs prev
+                    <Typography
+                      variant="caption"
+                      color={
+                        trendDelta > 0
+                          ? 'success.main'
+                          : trendDelta < 0
+                            ? 'error.main'
+                            : 'text.secondary'
+                      }
+                    >
+                      {trendDelta > 0 ? '+' : ''}
+                      {trendDelta.toFixed(2)} vs prev
                     </Typography>
                   </Box>
-                  <SparklineChart dataPoints={trend.dataPoints} color={colors[ti % colors.length]} />
+                  <SparklineChart
+                    dataPoints={trend.dataPoints}
+                    color={colors[ti % colors.length]}
+                  />
                 </Box>
               );
             })}
@@ -261,7 +351,9 @@ export function TeamDashboard() {
       {/* Sprint-by-Sprint Breakdown */}
       <Card>
         <CardContent>
-          <Typography variant="h6" gutterBottom>Sprint Breakdown</Typography>
+          <Typography variant="h6" gutterBottom>
+            Sprint Breakdown
+          </Typography>
           <TableContainer>
             <Table size="small">
               <TableHead>
@@ -271,7 +363,9 @@ export function TeamDashboard() {
                   <TableCell>Responses</TableCell>
                   {data.overallAverages.map((q) => (
                     <TableCell key={q.questionId} align="center">
-                      {q.questionLabel.length > 25 ? q.questionLabel.substring(0, 25) + '…' : q.questionLabel}
+                      {q.questionLabel.length > 25
+                        ? q.questionLabel.substring(0, 25) + '…'
+                        : q.questionLabel}
                     </TableCell>
                   ))}
                   <TableCell>Date</TableCell>
@@ -283,23 +377,35 @@ export function TeamDashboard() {
                     key={s.surveyId}
                     hover
                     sx={{ cursor: s.status === 'CLOSED' ? 'pointer' : 'default' }}
-                    onClick={() => { if (s.status === 'CLOSED') navigate(`/admin/surveys/${s.surveyId}/show`); }}
+                    onClick={() => {
+                      if (s.status === 'CLOSED') navigate(`/admin/surveys/${s.surveyId}/show`);
+                    }}
                   >
                     <TableCell>{s.sprintLabel}</TableCell>
                     <TableCell>
-                      <Chip label={s.status} size="small" color={s.status === 'OPEN' ? 'success' : 'default'} />
+                      <Chip
+                        label={s.status}
+                        size="small"
+                        color={s.status === 'OPEN' ? 'success' : 'default'}
+                      />
                     </TableCell>
-                    <TableCell>{s.submissionCount} / {s.expectedParticipants}</TableCell>
+                    <TableCell>
+                      {s.submissionCount} / {s.expectedParticipants}
+                    </TableCell>
                     {s.questionResults.map((qr) => (
                       <TableCell key={qr.questionId} align="center">
                         {qr.scores.length > 0 ? (
                           <Chip
                             label={qr.average.toFixed(1)}
                             size="small"
-                            color={qr.average >= 7 ? 'success' : qr.average >= 4 ? 'warning' : 'error'}
+                            color={
+                              qr.average >= 7 ? 'success' : qr.average >= 4 ? 'warning' : 'error'
+                            }
                             variant="outlined"
                           />
-                        ) : '—'}
+                        ) : (
+                          '—'
+                        )}
                       </TableCell>
                     ))}
                     <TableCell>
@@ -317,4 +423,3 @@ export function TeamDashboard() {
     </Box>
   );
 }
-

@@ -81,4 +81,3 @@ seedSampleData()
     prisma.$disconnect();
     process.exit(1);
   });
-
