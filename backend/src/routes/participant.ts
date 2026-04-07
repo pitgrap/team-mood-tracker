@@ -48,11 +48,16 @@ export function createParticipantRouter(surveyTokenSecret: string) {
 
     const questions = await prisma.question.findMany({ orderBy: { order: 'asc' } });
 
-    // Check if this token has already been used
-    const tokenHash = crypto.createHash('sha256').update(token).digest('hex');
-    const existingSubmission = await prisma.submission.findUnique({
-      where: { surveyId_tokenHash: { surveyId, tokenHash } },
-    });
+    // Check if this participant has already submitted (participantId sent as query param)
+    let alreadySubmitted = false;
+    const participantId = req.query.participantId as string | undefined;
+    if (participantId) {
+      const tokenHash = crypto.createHash('sha256').update(participantId).digest('hex');
+      const existingSubmission = await prisma.submission.findUnique({
+        where: { surveyId_tokenHash: { surveyId, tokenHash } },
+      });
+      alreadySubmitted = !!existingSubmission;
+    }
 
     res.json({
       id: survey.id,
@@ -61,7 +66,7 @@ export function createParticipantRouter(surveyTokenSecret: string) {
       status: survey.status,
       expectedParticipants: survey.expectedParticipants,
       submissionCount: survey._count.submissions,
-      alreadySubmitted: !!existingSubmission,
+      alreadySubmitted,
       questions: questions.map((q) => ({
         id: q.id,
         label: q.label,
@@ -95,8 +100,18 @@ export function createParticipantRouter(surveyTokenSecret: string) {
       return;
     }
 
-    // Check duplicate submission
-    const tokenHash = crypto.createHash('sha256').update(token).digest('hex');
+    // Check duplicate submission using participantId
+    const { responses, participantId } = req.body;
+
+    if (!participantId || typeof participantId !== 'string') {
+      res.status(400).json({
+        error: 'participantId is required',
+        code: 'VALIDATION_ERROR',
+      });
+      return;
+    }
+
+    const tokenHash = crypto.createHash('sha256').update(participantId).digest('hex');
     const existingSubmission = await prisma.submission.findUnique({
       where: { surveyId_tokenHash: { surveyId, tokenHash } },
     });
@@ -106,7 +121,6 @@ export function createParticipantRouter(surveyTokenSecret: string) {
     }
 
     // Validate responses
-    const { responses } = req.body;
     if (!Array.isArray(responses) || responses.length === 0) {
       res.status(400).json({ error: 'Responses are required', code: 'VALIDATION_ERROR' });
       return;

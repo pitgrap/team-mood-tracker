@@ -14,6 +14,21 @@ import {
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
 
+/**
+ * Get or create a unique participant ID for this browser session.
+ * Stored in sessionStorage so it survives page reloads within the same tab,
+ * but each new tab/private window gets a fresh ID.
+ */
+function getParticipantId(): string {
+  const key = 'mood_tracker_participant_id';
+  let id = sessionStorage.getItem(key);
+  if (!id) {
+    id = crypto.randomUUID();
+    sessionStorage.setItem(key, id);
+  }
+  return id;
+}
+
 interface Question {
   id: string;
   label: string;
@@ -42,7 +57,8 @@ export function SurveyPage() {
   useEffect(() => {
     async function loadSurvey() {
       try {
-        const res = await fetch(`${API_URL}/api/surveys/${token}`);
+        const participantId = getParticipantId();
+        const res = await fetch(`${API_URL}/api/surveys/${token}?participantId=${participantId}`);
         const data = await res.json();
 
         if (!res.ok) {
@@ -86,7 +102,7 @@ export function SurveyPage() {
       const res = await fetch(`${API_URL}/api/surveys/${token}/responses`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ responses }),
+        body: JSON.stringify({ responses, participantId: getParticipantId() }),
       });
 
       const data = await res.json();
