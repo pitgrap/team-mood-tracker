@@ -5,6 +5,7 @@ import {
   createAdminAuthRouter,
   adminTeamsRouter,
   createAdminSurveysRouter,
+  createParticipantRouter,
 } from './routes';
 import { createAuthMiddleware } from './middleware';
 import { AuthService } from './services';
@@ -45,6 +46,9 @@ export function createApp(config: EnvConfig) {
     '/api/admin',
     createAdminSurveysRouter(config.SURVEY_TOKEN_SECRET, config.SURVEY_TOKEN_EXPIRY, config.FRONTEND_URL),
   );
+
+  // Participant routes - no auth required (M3.3)
+  app.use('/api', createParticipantRouter(config.SURVEY_TOKEN_SECRET));
 
   return app;
 }
