@@ -219,12 +219,16 @@ Staging DB seeded via POST /api/test/seed (enabled only when NODE_ENV=test), cal
 
 ## 6. Test Data and Seeding
 
-Seed script (backend/prisma/seed.ts) creates:
+The main seed script (backend/prisma/seed.ts) creates:
 - 2 Question rows (the two fixed survey questions)
 - 1 default Admin account (email + password from env vars)
-- 2 test teams: Team Alpha, Team Beta
-- 1 open survey per team with expectedParticipants: 3
-- 1 closed survey per team with pre-filled responses (scores 5, 7, 9 for Q1 and 4, 6, 8 for Q2)
+
+A separate sample data script (backend/prisma/seed-sample.ts) can be run
+manually to populate development data:
+- Generates survey responses for an existing team (e.g. "Engineering Alpha")
+- Submits 3 responses to the first 7 surveys with upward-trending scores
+- Closes those 7 surveys, leaves remaining surveys open with partial/no submissions
+- Useful for testing the team dashboard trend charts and sprint breakdowns
 
 ---
 

@@ -18,8 +18,8 @@
 - Root package.json defines workspaces: ["frontend", "backend"]
 - frontend/ is a Vite + React + TypeScript project
 - backend/ is a Node.js + Express + TypeScript project
-- .nvmrc at the root specifies Node.js 20
-- Both package.json files have "engines": { "node": ">=20.0.0" }
+- .nvmrc at the root specifies Node.js 24
+- Both package.json files have "engines": { "node": ">=24.0.0" }
 - eslint and prettier are configured and run cleanly
 
 **Dependencies:** none
@@ -187,8 +187,39 @@
 - List, create, edit, delete all work via React Admin
 - Delete shows error toast if team has surveys
 - Data provider injects Authorization header automatically
+- Clicking a team row navigates to the team dashboard (show view)
 
 **Dependencies:** US-12, US-13
+
+---
+
+### US-14a · Admin Dashboard
+**As an** admin, **I want** a dashboard landing page after login that shows aggregate stats across all teams.
+
+**Acceptance criteria:**
+- GET /api/admin/dashboard returns aggregate stats: team count, survey count, open/closed counts, response count, per-question averages, per-team averages, recent surveys
+- Dashboard is the default page after login at /admin
+- Displays stat cards for teams, surveys (open/closed), and responses
+- Shows overall per-question averages with progress bars
+- Shows per-team average breakdown
+- Lists the 5 most recent surveys with status and submission progress
+
+**Dependencies:** US-12, US-13
+
+---
+
+### US-14b · Team Dashboard with Trends
+**As an** admin, **I want** a team-level dashboard showing mood trends across sprints.
+
+**Acceptance criteria:**
+- GET /api/admin/teams/:id/dashboard returns team details, overall averages, trend data, and per-sprint breakdown
+- Accessible by clicking a team in the team list
+- Shows stat cards: total surveys, closed, open, total responses
+- Displays overall per-question averages across closed surveys
+- Shows sparkline trend charts per question across closed sprints
+- Provides a sprint breakdown table with per-question averages and status for each survey
+
+**Dependencies:** US-13, US-14
 
 ---
 
@@ -355,6 +386,8 @@ US-01 Monorepo scaffold
   └── US-07 CORS
 
 US-02 + US-11 → US-13 Team API → US-14 Team UI
+US-12 + US-13 → US-14a Admin Dashboard
+US-13 + US-14 → US-14b Team Dashboard with Trends
 US-04 → US-15 Token generation
 US-02 + US-11 + US-13 + US-15 → US-16 Survey API → US-17 Survey UI
 US-02 + US-15 → US-18 Load survey API → US-19 Submit API

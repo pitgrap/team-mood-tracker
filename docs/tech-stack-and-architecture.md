@@ -30,7 +30,7 @@ native GitHub integration (auto-deploy on push to `main`).
 | Runtime       | Node.js                                                                         |
 | Framework     | [Express](https://expressjs.com/) + TypeScript                                  |
 | ORM           | [Prisma](https://www.prisma.io/)                                                 |
-| Auth          | JWT (`jsonwebtoken` + `express-jwt`)                                            |
+| Auth          | JWT (`jsonwebtoken` + custom middleware)                                        |
 
 ### Database
 | Concern       | Choice                                                                          |
@@ -160,11 +160,19 @@ throughout. Errors always return `{ "error": string, "code": string }`.
 |--------|------|------|--------------|----------|
 | `POST` | `/api/admin/login` | None | `{ email, password }` | `{ token }` (JWT, 8h expiry) |
 
+### Admin Dashboard
+
+| Method | Path | Auth | Request Body | Response |
+|--------|------|------|--------------|----------|
+| `GET` | `/api/admin/dashboard` | Admin JWT | — | Aggregate stats: team count, survey count, open/closed counts, response count, per-question averages, per-team averages, recent surveys |
+
 ### Teams
 
 | Method | Path | Auth | Request Body | Response |
 |--------|------|------|--------------|----------|
 | `GET` | `/api/admin/teams` | Admin JWT | — | `{ data: Team[], total: n }` |
+| `GET` | `/api/admin/teams/:id` | Admin JWT | — | `Team` |
+| `GET` | `/api/admin/teams/:id/dashboard` | Admin JWT | — | Team dashboard with overall averages, per-sprint breakdown, trend data |
 | `POST` | `/api/admin/teams` | Admin JWT | `{ name }` | `Team` |
 | `PATCH` | `/api/admin/teams/:id` | Admin JWT | `{ name }` | `Team` |
 | `DELETE` | `/api/admin/teams/:id` | Admin JWT | — | `204 No Content` |
@@ -177,6 +185,7 @@ throughout. Errors always return `{ "error": string, "code": string }`.
 | `GET` | `/api/admin/surveys/:id` | Admin JWT | — | `Survey` |
 | `POST` | `/api/admin/surveys` | Admin JWT | `{ teamId, sprintLabel, expectedParticipants }` | `Survey` + `participantUrl` |
 | `PATCH` | `/api/admin/surveys/:id/close` | Admin JWT | — | `Survey` |
+| `GET` | `/api/admin/surveys/:id/results` | Admin JWT | — | Results (only if `CLOSED`) |
 
 ### Participant Survey
 
@@ -261,7 +270,7 @@ services:
     runtime: node
     region: frankfurt
     plan: free
-    buildCommand: cd backend && npm ci && npx prisma migrate deploy && npm run build
+    buildCommand: cd backend && npm ci && npx prisma migrate deploy && npx prisma db seed && npm run build
     startCommand: cd backend && npm start
     healthCheckPath: /api/health
     envVars:
@@ -353,4 +362,4 @@ GitHub Actions (CI)
 - **React Admin** handles all admin CRUD — no separate admin backend needed
 - **Survey access** uses a shared short-lived JWT link; admin uses username + password with a JWT returned in the response body
 - **Anonymity**: response rows store no user identity — only surveyId, questionId, score, and submittedAt
-- **Duplicate submission** is prevented server-side via the Submission table (SHA-256 hash of the token, unique per survey)
+- **Duplicate submission** is prevented server-side via the Submission table (SHA-256 hash of a browser-generated participant ID, unique per survey)

@@ -4,25 +4,30 @@
 
 | Route | Page | Auth Required |
 |---|---|---|
+| / | Home / landing page | None |
 | /survey/:token | Participant survey form | Survey token in URL |
 | /survey/:token/waiting | Waiting for all responses screen | Survey token |
 | /survey/:token/results | Results page | Survey token |
 | /survey/:token/expired | Survey link expired screen | None |
 | /survey/:token/submitted | Already submitted screen | None |
-| /admin | Admin login page | None |
+| /admin | Admin login page / dashboard | None (login) / Admin JWT (dashboard) |
 | /admin/teams | Team list and management | Admin JWT |
+| /admin/teams/:id/show | Team dashboard with trends | Admin JWT |
+| /admin/teams/create | Create team form | Admin JWT |
+| /admin/teams/:id | Edit team form | Admin JWT |
 | /admin/surveys | Survey list with status badges | Admin JWT |
-| /admin/surveys/:id | Survey detail, participant link, close button | Admin JWT |
+| /admin/surveys/create | Create survey form | Admin JWT |
+| /admin/surveys/:id/show | Survey detail, participant link, results, close button | Admin JWT |
 
-Routing library: React Router v6. Auth guard: RequireAdmin wrapper checks for valid admin JWT in localStorage and redirects to /admin if missing.
+Routing library: React Router v7. React Admin handles admin sub-routes internally. Auth guard: RequireAdmin (via React Admin's `requireAuth`) checks for valid admin JWT in localStorage and redirects to login if missing.
 
 ## 2. Duplicate Submission Prevention
 
-Chosen mechanism: server-side Submission record using hashed token. A Submission table stores a SHA-256 hash of the participant survey token. Before saving responses the API checks whether a hash already exists for that survey. No user identity is stored.
+Chosen mechanism: server-side Submission record using a browser-generated participant ID. The frontend generates a random participant ID on first visit and persists it in localStorage. On submission, the participant ID is sent in the request body. The backend computes a SHA-256 hash of the participant ID and stores it in the Submission table. Before saving responses, the API checks whether a hash already exists for that survey. No user identity is stored.
 
-Prisma model to add: Submission with fields id (uuid), surveyId (string), tokenHash (string), submittedAt (DateTime). Unique constraint on [surveyId, tokenHash]. Add submissions Submission[] to Survey model.
+Prisma model: Submission with fields id (uuid), surveyId (string), tokenHash (string), submittedAt (DateTime). Unique constraint on [surveyId, tokenHash]. The `submissions` relation is defined on the Survey model.
 
-Server-side logic: verify token, compute SHA-256(token), check Submission table, if found return 409 ALREADY_SUBMITTED, else save Response rows and Submission row, check if count equals expectedParticipants and auto-close if so.
+Server-side logic: verify survey token (JWT in URL), extract participantId from request body, compute SHA-256(participantId), check Submission table, if found return 409 ALREADY_SUBMITTED, else save Response rows and Submission row in a transaction, check if submission count equals expectedParticipants and auto-close if so.
 
 ## 3. Admin Authentication Transport
 
@@ -64,4 +69,4 @@ GET /api/health returns 200 { "status": "ok" }. Registered before any auth middl
 
 ## 12. Node.js Version Consistency
 
-Use Node.js v24 LTS throughout. .nvmrc at repo root contains 24. Both package.json files include engines node >=24.0.0. render.yaml inherits version from .nvmrc automatically.
+Use Node.js v24 throughout. .nvmrc at repo root contains 24. Both package.json files include engines node >=24.0.0. render.yaml inherits version from .nvmrc automatically.

@@ -55,10 +55,12 @@ enforced via their unique survey token
 - The link contains a **short-lived JWT token** encoding the `surveyId`
   and an expiry (configurable, default **7 days**)
 - Any team member opening the link can submit once
-- Duplicate submission is prevented by storing a **hashed fingerprint**
-  of the token in the Submission table (no user identity stored)
+- Duplicate submission is prevented by storing a **SHA-256 hash of a
+  browser-generated participant ID** in the Submission table (no user
+  identity stored); the participant ID is generated client-side and
+  persisted in the browser's local storage
 - Expired tokens show a "This survey link has expired" message
-- Used tokens (post-submission) show a "You have already submitted" message
+- Already-submitted participants show a "You have already submitted" message
 
 ---
 
@@ -85,12 +87,28 @@ already closed, or on a separate results page for closed surveys:
 
 ## 4. Admin Interface
 
-### 4.1 Team Management
+### 4.1 Admin Dashboard
+
+- Landing page after login showing aggregate stats across all teams
+- Displays: total teams, total surveys, open/closed counts, total responses
+- Per-question overall averages across all closed surveys
+- Per-team average breakdown
+- Recent surveys list with status and submission progress
+
+### 4.2 Team Management
 
 - Create, edit, and delete **development teams**
 - Each team has a **name** (unique)
 
-### 4.2 Survey / Iteration Management
+### 4.3 Team Dashboard
+
+- Accessible by clicking a team in the list
+- Shows team-level statistics: total surveys, open/closed counts, total responses
+- **Overall averages** per question across all closed surveys for the team
+- **Trend charts** (sparklines) showing per-question average over sprints
+- **Sprint breakdown table** with per-question scores for each survey
+
+### 4.4 Survey / Iteration Management
 
 - Create a new **survey** for a team, specifying:
   - Sprint label (free text, unique per team)
@@ -98,12 +116,12 @@ already closed, or on a separate results page for closed surveys:
 - View all surveys with status: `open`, `closed`
 - Copy the **participant survey link** for a given survey
 - Manually close an open survey
-- View historical results per team and per sprint
+- View detailed results for closed surveys (average, median, score distribution)
 
-### 4.3 Access Control
+### 4.5 Access Control
 
 - Admin role is separate from participant role
-- Admin interface requires **username + password** authentication
+- Admin interface requires **email + password** authentication
 - Admin session is managed via a **JWT** stored in localStorage
 
 ---
