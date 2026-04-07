@@ -80,6 +80,7 @@ jobs:
           node-version-file: '.nvmrc'
           cache: 'npm'
       - run: npm ci
+      - run: cd backend && npx prisma generate
       - run: cd backend && npx prisma migrate deploy
       - run: cd backend && npx prisma db seed
       - run: cd backend && npm run test:integration
