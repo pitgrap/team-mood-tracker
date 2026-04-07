@@ -1,8 +1,11 @@
-import { Admin, Resource, CustomRoutes } from 'react-admin';
-import { Route } from 'react-router-dom';
+import { Admin, Resource } from 'react-admin';
+import GroupIcon from '@mui/icons-material/Group';
+import PollIcon from '@mui/icons-material/Poll';
 import { authProvider } from './authProvider';
 import { dataProvider } from './dataProvider';
 import { AdminDashboard } from './AdminDashboard';
+import { TeamList, TeamCreate, TeamEdit } from './TeamResource';
+import { SurveyList, SurveyCreate, SurveyShow } from './SurveyResource';
 
 export function AdminApp() {
   return (
@@ -13,11 +16,20 @@ export function AdminApp() {
       dashboard={AdminDashboard}
       requireAuth
     >
-      {/* Team and Survey resources will be added in M3 */}
-      <Resource name="teams" />
-      <CustomRoutes>
-        <Route path="/placeholder" element={<div />} />
-      </CustomRoutes>
+      <Resource
+        name="teams"
+        list={TeamList}
+        create={TeamCreate}
+        edit={TeamEdit}
+        icon={GroupIcon}
+      />
+      <Resource
+        name="surveys"
+        list={SurveyList}
+        create={SurveyCreate}
+        show={SurveyShow}
+        icon={PollIcon}
+      />
     </Admin>
   );
 }

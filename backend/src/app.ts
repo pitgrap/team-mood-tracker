@@ -1,6 +1,11 @@
 import express from 'express';
 import cors from 'cors';
-import { healthRouter, createAdminAuthRouter } from './routes';
+import {
+  healthRouter,
+  createAdminAuthRouter,
+  adminTeamsRouter,
+  createAdminSurveysRouter,
+} from './routes';
 import { createAuthMiddleware } from './middleware';
 import { AuthService } from './services';
 import { EnvConfig } from './config';
@@ -34,7 +39,12 @@ export function createApp(config: EnvConfig) {
   const authMiddleware = createAuthMiddleware(authService);
   app.use('/api/admin', authMiddleware);
 
-  // Protected admin routes will be added here in M3
+  // Protected admin routes (M3)
+  app.use('/api/admin', adminTeamsRouter);
+  app.use(
+    '/api/admin',
+    createAdminSurveysRouter(config.SURVEY_TOKEN_SECRET, config.SURVEY_TOKEN_EXPIRY, config.FRONTEND_URL),
+  );
 
   return app;
 }
