@@ -8,6 +8,11 @@ export default defineConfig({
     environment: 'jsdom',
     setupFiles: ['./src/test/setup.ts'],
     include: ['src/**/*.{test,spec}.{ts,tsx}'],
+    server: {
+      deps: {
+        inline: [/ra-ui-materialui/, /ra-core/, /react-admin/],
+      },
+    },
     coverage: {
       provider: 'v8',
       reporter: ['text', 'lcov'],
@@ -22,4 +27,3 @@ export default defineConfig({
     },
   },
 });
-
