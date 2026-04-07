@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { Typography, Container, Box } from '@mui/material';
 import { AdminApp } from './admin';
+import { SurveyPage, ResultsPage, WaitingPage, SubmittedPage, ExpiredPage } from './survey';
 
 function Home() {
   return (
@@ -23,6 +24,11 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/admin/*" element={<AdminApp />} />
+        <Route path="/survey/:token" element={<SurveyPage />} />
+        <Route path="/survey/:token/waiting" element={<WaitingPage />} />
+        <Route path="/survey/:token/submitted" element={<SubmittedPage />} />
+        <Route path="/survey/:token/expired" element={<ExpiredPage />} />
+        <Route path="/survey/:token/results" element={<ResultsPage />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>
