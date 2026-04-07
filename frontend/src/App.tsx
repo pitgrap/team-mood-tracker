@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { Typography, Container, Box } from '@mui/material';
+import { AdminApp } from './admin';
 
 function Home() {
   return (
@@ -21,6 +22,7 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/admin/*" element={<AdminApp />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>
