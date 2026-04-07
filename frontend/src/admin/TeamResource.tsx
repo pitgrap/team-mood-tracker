@@ -15,7 +15,7 @@ import {
 export function TeamList() {
   return (
     <List>
-      <Datagrid>
+      <Datagrid rowClick="show">
         <TextField source="name" />
         <DateField source="createdAt" label="Created" />
         <EditButton />
@@ -44,4 +44,3 @@ export function TeamEdit() {
     </Edit>
   );
 }
-

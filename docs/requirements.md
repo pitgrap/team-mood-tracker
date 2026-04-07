@@ -14,8 +14,8 @@ results, and pushes data for reporting to an external Metabase endpoint.
 
 Each survey contains exactly two fixed questions (seeded at startup):
 
-1. **Sprint Satisfaction** – *"How satisfied are you with the sprint result?"*
-2. **Personal Mood** – *"How do you feel?"*
+1. **Sprint Satisfaction** – _"How satisfied are you with the sprint result?"_
+2. **Personal Mood** – _"How do you feel?"_
 
 ### 1.2 Answer Format
 
@@ -27,7 +27,7 @@ Each survey contains exactly two fixed questions (seeded at startup):
 ### 1.3 Submission Rules
 
 - Each participant may submit **exactly once** per survey instance,
-enforced via their unique survey token
+  enforced via their unique survey token
 - Submissions are **anonymous** — no user identity is stored with a response
 - The survey **auto-closes** once the expected participant count has been reached
 - An admin may **manually close** a survey at any time before that point
@@ -55,10 +55,12 @@ enforced via their unique survey token
 - The link contains a **short-lived JWT token** encoding the `surveyId`
   and an expiry (configurable, default **7 days**)
 - Any team member opening the link can submit once
-- Duplicate submission is prevented by storing a **hashed fingerprint**
-  of the token in the Submission table (no user identity stored)
+- Duplicate submission is prevented by storing a **SHA-256 hash of a
+  browser-generated participant ID** in the Submission table (no user
+  identity stored); the participant ID is generated client-side and
+  persisted in the browser's local storage
 - Expired tokens show a "This survey link has expired" message
-- Used tokens (post-submission) show a "You have already submitted" message
+- Already-submitted participants show a "You have already submitted" message
 
 ---
 
@@ -75,22 +77,38 @@ already closed, or on a separate results page for closed surveys:
 
 ### Results Page Content
 
-| Metric  | Description                            |
-|---------|----------------------------------------|
-| Raw     | All individual scores per question     |
-| Average | Arithmetic mean per question           |
-| Median  | Median value per question              |
+| Metric  | Description                        |
+| ------- | ---------------------------------- |
+| Raw     | All individual scores per question |
+| Average | Arithmetic mean per question       |
+| Median  | Median value per question          |
 
 ---
 
 ## 4. Admin Interface
 
-### 4.1 Team Management
+### 4.1 Admin Dashboard
+
+- Landing page after login showing aggregate stats across all teams
+- Displays: total teams, total surveys, open/closed counts, total responses
+- Per-question overall averages across all closed surveys
+- Per-team average breakdown
+- Recent surveys list with status and submission progress
+
+### 4.2 Team Management
 
 - Create, edit, and delete **development teams**
 - Each team has a **name** (unique)
 
-### 4.2 Survey / Iteration Management
+### 4.3 Team Dashboard
+
+- Accessible by clicking a team in the list
+- Shows team-level statistics: total surveys, open/closed counts, total responses
+- **Overall averages** per question across all closed surveys for the team
+- **Trend charts** (sparklines) showing per-question average over sprints
+- **Sprint breakdown table** with per-question scores for each survey
+
+### 4.4 Survey / Iteration Management
 
 - Create a new **survey** for a team, specifying:
   - Sprint label (free text, unique per team)
@@ -98,12 +116,12 @@ already closed, or on a separate results page for closed surveys:
 - View all surveys with status: `open`, `closed`
 - Copy the **participant survey link** for a given survey
 - Manually close an open survey
-- View historical results per team and per sprint
+- View detailed results for closed surveys (average, median, score distribution)
 
-### 4.3 Access Control
+### 4.5 Access Control
 
 - Admin role is separate from participant role
-- Admin interface requires **username + password** authentication
+- Admin interface requires **email + password** authentication
 - Admin session is managed via a **JWT** stored in localStorage
 
 ---
@@ -119,14 +137,14 @@ already closed, or on a separate results page for closed surveys:
 
 ## 6. Non-Functional Requirements
 
-| Concern        | Requirement                                                          |
-|----------------|----------------------------------------------------------------------|
-| Frequency      | One survey per team per Scrum sprint                                 |
-| Anonymity      | Individual answers must not be traceable to specific users           |
-| Scalability    | Must support multiple teams running surveys concurrently             |
-| Accessibility  | UI must be usable on both desktop and mobile browsers                |
-| Auth           | Admin requires login; participants use a shared token link           |
-| Resilience     | A failed Metabase push must be logged but must not crash the app     |
+| Concern       | Requirement                                                      |
+| ------------- | ---------------------------------------------------------------- |
+| Frequency     | One survey per team per Scrum sprint                             |
+| Anonymity     | Individual answers must not be traceable to specific users       |
+| Scalability   | Must support multiple teams running surveys concurrently         |
+| Accessibility | UI must be usable on both desktop and mobile browsers            |
+| Auth          | Admin requires login; participants use a shared token link       |
+| Resilience    | A failed Metabase push must be logged but must not crash the app |
 
 ---
 

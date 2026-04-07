@@ -5,6 +5,7 @@ import { authProvider } from './authProvider';
 import { dataProvider } from './dataProvider';
 import { AdminDashboard } from './AdminDashboard';
 import { TeamList, TeamCreate, TeamEdit } from './TeamResource';
+import { TeamDashboard } from './TeamDashboard';
 import { SurveyList, SurveyCreate, SurveyShow } from './SurveyResource';
 
 export function AdminApp() {
@@ -21,6 +22,7 @@ export function AdminApp() {
         list={TeamList}
         create={TeamCreate}
         edit={TeamEdit}
+        show={TeamDashboard}
         icon={GroupIcon}
       />
       <Resource

@@ -4,6 +4,7 @@ import {
   healthRouter,
   createAdminAuthRouter,
   adminTeamsRouter,
+  adminDashboardRouter,
   createAdminSurveysRouter,
   createParticipantRouter,
 } from './routes';
@@ -41,10 +42,15 @@ export function createApp(config: EnvConfig) {
   app.use('/api/admin', authMiddleware);
 
   // Protected admin routes (M3)
+  app.use('/api/admin', adminDashboardRouter);
   app.use('/api/admin', adminTeamsRouter);
   app.use(
     '/api/admin',
-    createAdminSurveysRouter(config.SURVEY_TOKEN_SECRET, config.SURVEY_TOKEN_EXPIRY, config.FRONTEND_URL),
+    createAdminSurveysRouter(
+      config.SURVEY_TOKEN_SECRET,
+      config.SURVEY_TOKEN_EXPIRY,
+      config.FRONTEND_URL,
+    ),
   );
 
   // Participant routes - no auth required (M3.3)

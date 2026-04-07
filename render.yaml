@@ -45,4 +45,3 @@ databases:
     region: frankfurt
     plan: free
     databaseName: moodtracker
-
