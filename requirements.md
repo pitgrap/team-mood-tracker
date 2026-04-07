@@ -27,7 +27,7 @@ Each survey contains exactly two fixed questions (seeded at startup):
 ### 1.3 Submission Rules
 
 - Each participant may submit **exactly once** per survey instance,
-  enforced via their unique survey token
+enforced via their unique survey token
 - Submissions are **anonymous** — no user identity is stored with a response
 - The survey **auto-closes** once the expected participant count has been reached
 - An admin may **manually close** a survey at any time before that point
