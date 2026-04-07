@@ -1,0 +1,71 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Team {
+  id        String   @id @default(uuid())
+  name      String   @unique
+  surveys   Survey[]
+  createdAt DateTime @default(now())
+}
+
+model Survey {
+  id                   String       @id @default(uuid())
+  sprintLabel          String
+  expectedParticipants Int
+  status               SurveyStatus @default(OPEN)
+  token                String       @unique
+  team                 Team         @relation(fields: [teamId], references: [id])
+  teamId               String
+  responses            Response[]
+  submissions          Submission[]
+  createdAt            DateTime     @default(now())
+  closedAt             DateTime?
+
+  @@unique([teamId, sprintLabel])
+}
+
+model Question {
+  id        String     @id @default(uuid())
+  label     String
+  order     Int        @unique
+  responses Response[]
+}
+
+model Response {
+  id          String   @id @default(uuid())
+  survey      Survey   @relation(fields: [surveyId], references: [id])
+  surveyId    String
+  question    Question @relation(fields: [questionId], references: [id])
+  questionId  String
+  score       Int
+  submittedAt DateTime @default(now())
+}
+
+model Submission {
+  id          String   @id @default(uuid())
+  survey      Survey   @relation(fields: [surveyId], references: [id])
+  surveyId    String
+  tokenHash   String
+  submittedAt DateTime @default(now())
+
+  @@unique([surveyId, tokenHash])
+}
+
+model Admin {
+  id           String   @id @default(uuid())
+  email        String   @unique
+  passwordHash String
+  createdAt    DateTime @default(now())
+}
+
+enum SurveyStatus {
+  OPEN
+  CLOSED
+}
+
