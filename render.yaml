@@ -4,8 +4,8 @@ services:
     runtime: node
     region: frankfurt
     plan: free
-    buildCommand: cd backend && npm ci && npx prisma migrate deploy && npx prisma db seed && npm run build
-    startCommand: cd backend && npm start
+    buildCommand: npm i -g pnpm && cd backend && pnpm install --frozen-lockfile && pnpm exec prisma migrate deploy && pnpm exec prisma db seed && pnpm run build
+    startCommand: cd backend && pnpm start
     healthCheckPath: /api/health
     envVars:
       - key: DATABASE_URL
@@ -34,7 +34,7 @@ services:
     runtime: static
     region: frankfurt
     plan: free
-    buildCommand: cd frontend && npm ci && npm run build
+    buildCommand: npm i -g pnpm && cd frontend && pnpm install --frozen-lockfile && pnpm run build
     staticPublishPath: frontend/dist
     envVars:
       - key: VITE_API_URL

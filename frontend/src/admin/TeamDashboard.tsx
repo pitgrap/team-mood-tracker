@@ -240,7 +240,7 @@ export function TeamDashboard() {
 
       {/* Stat Cards */}
       <Grid container spacing={2} sx={{ mb: 3 }}>
-        <Grid item xs={6} md={3}>
+        <Grid size={{ xs: 6, md: 3 }}>
           <StatCard
             title="Surveys"
             value={data.totalSurveys}
@@ -248,7 +248,7 @@ export function TeamDashboard() {
             color="#9c27b0"
           />
         </Grid>
-        <Grid item xs={6} md={3}>
+        <Grid size={{ xs: 6, md: 3 }}>
           <StatCard
             title="Closed"
             value={data.closedSurveys}
@@ -256,7 +256,7 @@ export function TeamDashboard() {
             color="#2e7d32"
           />
         </Grid>
-        <Grid item xs={6} md={3}>
+        <Grid size={{ xs: 6, md: 3 }}>
           <StatCard
             title="Open"
             value={data.openSurveys}
@@ -264,7 +264,7 @@ export function TeamDashboard() {
             color="#ed6c02"
           />
         </Grid>
-        <Grid item xs={6} md={3}>
+        <Grid size={{ xs: 6, md: 3 }}>
           <StatCard
             title="Responses"
             value={data.totalResponses}

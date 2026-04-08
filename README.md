@@ -24,7 +24,7 @@ A web application for tracking team mood at the end of each Scrum sprint. Admins
 ## Prerequisites
 
 - **Node.js** ≥ 24.0.0
-- **npm** (ships with Node)
+- **pnpm** ≥ 10 (`npm i -g pnpm` or via [Corepack](https://pnpm.io/installation#using-corepack))
 - **PostgreSQL** 16+ (local install or via Docker)
 - **Docker & Docker Compose** (optional, for the test database)
 
@@ -40,7 +40,7 @@ cd team-mood-tracker
 ### 2. Install dependencies
 
 ```bash
-npm install
+pnpm install
 ```
 
 This installs dependencies for both the `frontend` and `backend` workspaces.
@@ -85,8 +85,8 @@ Optional variables:
 
 ```bash
 cd backend
-npx prisma migrate dev
-npm run prisma:seed      # seeds questions and admin account (requires ADMIN_SEED_EMAIL/PASSWORD)
+pnpm exec prisma migrate dev
+pnpm run prisma:seed      # seeds questions and admin account (requires ADMIN_SEED_EMAIL/PASSWORD)
 cd ..
 ```
 
@@ -96,10 +96,10 @@ In two separate terminals:
 
 ```bash
 # Terminal 1 — Backend (http://localhost:3001)
-npm run dev --workspace=backend
+pnpm --filter backend dev
 
 # Terminal 2 — Frontend (http://localhost:5173)
-npm run dev --workspace=frontend
+pnpm --filter frontend dev
 ```
 
 The frontend is available at [http://localhost:5173](http://localhost:5173) and the admin panel at [http://localhost:5173/admin](http://localhost:5173/admin).
@@ -108,18 +108,18 @@ The frontend is available at [http://localhost:5173](http://localhost:5173) and 
 
 ```bash
 # Backend tests
-npm test --workspace=backend
+pnpm --filter backend test
 
 # Frontend tests
-npm test --workspace=frontend
+pnpm --filter frontend test
 ```
 
 ## Linting & Formatting
 
 ```bash
-npm run lint          # ESLint across all workspaces
-npm run format        # check formatting with Prettier
-npm run format:fix    # auto-fix formatting
+pnpm run lint          # ESLint across all workspaces
+pnpm run format        # check formatting with Prettier
+pnpm run format:fix    # auto-fix formatting
 ```
 
 ## Project Structure
