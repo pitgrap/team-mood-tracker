@@ -132,7 +132,7 @@ export function AdminDashboard() {
 
       {/* Stat Cards */}
       <Grid container spacing={2} sx={{ mb: 3 }}>
-        <Grid item xs={6} md={2.4}>
+        <Grid size={{ xs: 6, md: 2.4 }}>
           <StatCard
             title="Teams"
             value={data.teamCount}
@@ -140,7 +140,7 @@ export function AdminDashboard() {
             color="#1976d2"
           />
         </Grid>
-        <Grid item xs={6} md={2.4}>
+        <Grid size={{ xs: 6, md: 2.4 }}>
           <StatCard
             title="Surveys"
             value={data.surveyCount}
@@ -148,7 +148,7 @@ export function AdminDashboard() {
             color="#9c27b0"
           />
         </Grid>
-        <Grid item xs={6} md={2.4}>
+        <Grid size={{ xs: 6, md: 2.4 }}>
           <StatCard
             title="Open"
             value={data.openSurveys}
@@ -156,7 +156,7 @@ export function AdminDashboard() {
             color="#ed6c02"
           />
         </Grid>
-        <Grid item xs={6} md={2.4}>
+        <Grid size={{ xs: 6, md: 2.4 }}>
           <StatCard
             title="Closed"
             value={data.closedSurveys}
@@ -164,7 +164,7 @@ export function AdminDashboard() {
             color="#2e7d32"
           />
         </Grid>
-        <Grid item xs={6} md={2.4}>
+        <Grid size={{ xs: 6, md: 2.4 }}>
           <StatCard
             title="Responses"
             value={data.responseCount}
@@ -177,7 +177,7 @@ export function AdminDashboard() {
       <Grid container spacing={3}>
         {/* Overall Question Averages */}
         {data.questionStats.length > 0 && data.questionStats.some((q) => q.totalResponses > 0) && (
-          <Grid item xs={12} md={6}>
+          <Grid size={{ xs: 12, md: 6 }}>
             <Card>
               <CardContent>
                 <Typography variant="h6" gutterBottom>
@@ -210,7 +210,7 @@ export function AdminDashboard() {
 
         {/* Per-Team Averages */}
         {data.teamStats.length > 0 && (
-          <Grid item xs={12} md={6}>
+          <Grid size={{ xs: 12, md: 6 }}>
             <Card>
               <CardContent>
                 <Typography variant="h6" gutterBottom>
@@ -267,7 +267,7 @@ export function AdminDashboard() {
         )}
 
         {/* Recent Surveys */}
-        <Grid item xs={12}>
+        <Grid size={12}>
           <Card>
             <CardContent>
               <Typography variant="h6" gutterBottom>
