@@ -33,7 +33,7 @@ jobs:
           cache: 'pnpm'
       - run: pnpm install --frozen-lockfile
       - run: cd backend && pnpm exec prisma generate
-      - run: cd backend && pnpm exec eslint src/ --ext .ts
+      - run: cd backend && pnpm exec eslint src/
       - run: cd backend && pnpm exec tsc --noEmit
 
   backend-unit:
@@ -100,7 +100,7 @@ jobs:
           node-version-file: '.nvmrc'
           cache: 'pnpm'
       - run: pnpm install --frozen-lockfile
-      - run: cd frontend && pnpm exec eslint src/ --ext .ts,.tsx
+      - run: cd frontend && pnpm exec eslint src/
       - run: cd frontend && pnpm exec tsc --noEmit
 
   frontend-unit:
