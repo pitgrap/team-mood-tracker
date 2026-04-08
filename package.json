@@ -2,12 +2,9 @@
   "name": "team-mood-tracker",
   "version": "1.0.0",
   "private": true,
-  "workspaces": [
-    "frontend",
-    "backend"
-  ],
+  "packageManager": "pnpm@10.30.0",
   "scripts": {
-    "lint": "npm run lint --workspaces",
+    "lint": "pnpm -r run lint",
     "format": "prettier --check .",
     "format:fix": "prettier --write ."
   },

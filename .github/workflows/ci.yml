@@ -12,12 +12,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v4
         with:
           node-version-file: '.nvmrc'
-          cache: 'npm'
-      - run: npm ci
-      - run: npx prettier --check .
+          cache: 'pnpm'
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm exec prettier --check .
 
   backend-lint-typecheck:
     name: Backend Lint & Type Check
@@ -25,14 +26,15 @@ jobs:
     needs: format-check
     steps:
       - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v4
         with:
           node-version-file: '.nvmrc'
-          cache: 'npm'
-      - run: npm ci
-      - run: cd backend && npx prisma generate
-      - run: cd backend && npx eslint src/ --ext .ts
-      - run: cd backend && npx tsc --noEmit
+          cache: 'pnpm'
+      - run: pnpm install --frozen-lockfile
+      - run: cd backend && pnpm exec prisma generate
+      - run: cd backend && pnpm exec eslint src/ --ext .ts
+      - run: cd backend && pnpm exec tsc --noEmit
 
   backend-unit:
     name: Backend Unit Tests
@@ -40,13 +42,14 @@ jobs:
     needs: backend-lint-typecheck
     steps:
       - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v4
         with:
           node-version-file: '.nvmrc'
-          cache: 'npm'
-      - run: npm ci
-      - run: cd backend && npx prisma generate
-      - run: cd backend && npm run test:unit
+          cache: 'pnpm'
+      - run: pnpm install --frozen-lockfile
+      - run: cd backend && pnpm exec prisma generate
+      - run: cd backend && pnpm run test:unit
 
   backend-integration:
     name: Backend Integration Tests
@@ -75,28 +78,30 @@ jobs:
       ADMIN_SEED_PASSWORD: testpassword
     steps:
       - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v4
         with:
           node-version-file: '.nvmrc'
-          cache: 'npm'
-      - run: npm ci
-      - run: cd backend && npx prisma generate
-      - run: cd backend && npx prisma migrate deploy
-      - run: cd backend && npx prisma db seed
-      - run: cd backend && npm run test:integration
+          cache: 'pnpm'
+      - run: pnpm install --frozen-lockfile
+      - run: cd backend && pnpm exec prisma generate
+      - run: cd backend && pnpm exec prisma migrate deploy
+      - run: cd backend && pnpm exec prisma db seed
+      - run: cd backend && pnpm run test:integration
 
   frontend-lint-typecheck:
     name: Frontend Lint & Type Check
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v4
         with:
           node-version-file: '.nvmrc'
-          cache: 'npm'
-      - run: npm ci
-      - run: cd frontend && npx eslint src/ --ext .ts,.tsx
-      - run: cd frontend && npx tsc --noEmit
+          cache: 'pnpm'
+      - run: pnpm install --frozen-lockfile
+      - run: cd frontend && pnpm exec eslint src/ --ext .ts,.tsx
+      - run: cd frontend && pnpm exec tsc --noEmit
 
   frontend-unit:
     name: Frontend Unit Tests
@@ -104,12 +109,13 @@ jobs:
     needs: frontend-lint-typecheck
     steps:
       - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v4
         with:
           node-version-file: '.nvmrc'
-          cache: 'npm'
-      - run: npm ci
-      - run: cd frontend && npm test
+          cache: 'pnpm'
+      - run: pnpm install --frozen-lockfile
+      - run: cd frontend && pnpm test
 
   e2e:
     name: E2E Tests
@@ -117,10 +123,11 @@ jobs:
     needs: [backend-unit, backend-integration, frontend-unit]
     steps:
       - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v4
         with:
           node-version-file: '.nvmrc'
-          cache: 'npm'
-      - run: npm ci
-      - run: npx playwright install --with-deps chromium
+          cache: 'pnpm'
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm exec playwright install --with-deps chromium
       - run: echo "E2E tests placeholder — will be implemented in M5"
